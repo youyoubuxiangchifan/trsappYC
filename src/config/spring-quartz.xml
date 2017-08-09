@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task-3.0.xsd 
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<!-- 线程执行器配置，用于任务注册 -->
+	<bean id="executor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="10" />
+	 	<property name="maxPoolSize" value="100" />
+	 	<property name="queueCapacity" value="500" />
+	</bean>
+	
+	<!-- 新增job请标明注释,做好分类。 -->
+	
+	<!-- 计划调度业务类BIGIN -->
+	<!-- wcm数据推送job -->
+	<bean id="appDataPushToWcmJobTask" class="com.trs.scheduling.AppDataPushToWcmJobTask" />
+	
+	<!-- 计划调度业务类 END -->
+	
+	<!-- 调度业务配置BIGIN -->
+	<!-- wcm数据推送detail -->
+	<bean id="appDataPushToWcmJobTaskDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	 	<property name="targetObject" ref="appDataPushToWcmJobTask" />
+	 	<property name="targetMethod" value="dataPushToWcm" />
+	</bean>
+	
+	<!-- 调度业务配置END -->
+	
+	<!-- 触发器BEGIN -->
+
+	<!-- wcm数据推送时间配置Trigger -->
+	<bean id="appDataPushToWcmTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="appDataPushToWcmJobTaskDetail" />
+		<property name="cronExpression" value="0 0 12 * * ?" />
+	</bean>
+	
+	<!-- 触发器END -->
+	
+	<!-- 计划调度启用列表 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			 <list>
+			 	<!-- 启用wcm数据推送计划调度 -->
+			 	<ref bean="appDataPushToWcmTrigger" />
+			 	
+			 </list>
+		</property>
+		<property name="taskExecutor" ref="executor" />
+	</bean>
+</beans>

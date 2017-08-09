@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<!-- 配置数据源 -->
+	<context:property-placeholder location="classpath:config/jdbc.properties"/>
+	<bean id="dataSource" class="org.logicalcobwebs.proxool.ProxoolDataSource">
+		<property name="driver" value="${proxool.driver}"/>
+		<property name="driverUrl" value="${proxool.driverUrl}"/>
+		<property name="alias" value="${proxool.alias}"/>
+		<property name="user" value="${proxool.user}"/>
+		<property name="password" value="${proxool.password}"/>
+		<property name="prototypeCount" value="${proxool.prototypeCount}"/>
+		<property name="minimumConnectionCount" value="${proxool.minimumConnectionCount}"/>
+		<property name="maximumConnectionCount" value="${proxool.maximumConnectionCount}"/>
+		<property name="houseKeepingTestSql" value="${proxool.houseKeepingTestSql}"/>
+		<!--<property name="houseKeepingSleepTime" value="${proxool.houseKeepingSleepTime}"/>-->
+		<property name="delegateProperties" value="user=${proxool.user},password=${proxool.password}"/> 
+	</bean>
+	<!--  配置hibernate SessionFactory-->
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler"/>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		 <property name="lobHandler" ref="lobHandler"/>
+		  <property name="mappingLocations">
+            <list>
+            	<value>classpath:/com/trs/model/*.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.connection.SetBigStringTryClob">true</prop>
+				<prop key="hibernate.dialect">${proxool.dialect}</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.max_fetch_depth">1</prop>
+				<prop key="hibernate.jdbc.fetch_size">10</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				<prop key="hibernate.jdbc.use_scrollable_resultset">false</prop>
+				<prop key="hibernate.use_outer_join">true</prop>
+				<prop key="hibernate.show_sql">false</prop>
+<!--				<prop key="hibernate.default_schema">trsapp</prop>-->
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.connection.pool_size">20</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.connection.release_mode">after_transaction</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.OSCacheProvider</prop>
+			</props>
+		</property>
+	</bean>
+<!-- 配置hibernateTemplate 
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">  
+	    <property name="sessionFactory" ref="sessionFactory"></property>  
+	</bean> -->
+<!--	<import resource="classpath:config/spring-flow.xml" />-->
+	<!-- 初始化数据库类型选择 -->
+	<bean id="changeDbType" class="com.trs.dbhibernate.ChangeDBType"/>
+	<!--  动态代理类，加载自定义工作流bean -->
+	<bean id="ApplicationCt" class="com.trs.appcontext.ApplicationCt"/>
+	
+    <!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+    
+   <!-- 声明式事务管理-->
+    <aop:config> 
+       <aop:pointcut id="userServicePointcut" expression="execution(* com.trs.service..*Service.*(..))"/>
+ <!--       <aop:pointcut id="dictServicePointcut" expression="execution(* com.trs.dao.impl..*Impl.*(..))"/>-->
+        <!--<aop:pointcut id="gicpServicePointcut" expression="execution(* com.trs.gicp.core.service.impl..*ServiceImpl.*(..))"/>
+        <aop:pointcut id="schedulingServicePointcut" expression="execution(* com.trs.gicp.scheduling.impl..*ServiceImpl.*(..))"/>-->
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="userServicePointcut"/>
+    	<!-- <aop:advisor advice-ref="txAdvice" pointcut-ref="dictServicePointcut"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="gicpServicePointcut"/>
+    	<aop:advisor advice-ref="txAdvice" pointcut-ref="schedulingServicePointcut"/>-->
+    </aop:config>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="load*" read-only="true"/>
+            <tx:method name="query*" read-only="true"/>
+             <tx:method name="add*" />
+              <tx:method name="update*" />
+               <tx:method name="insert*"/>
+                <tx:method name="modify*"/>
+                 <tx:method name="delete*"/>
+                 <tx:method name="del*"/>
+            <tx:method name="*" rollback-for="Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+</beans>  

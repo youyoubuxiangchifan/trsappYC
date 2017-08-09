@@ -1,0 +1,52 @@
+/*@charset "utf-8";*/
+/*base style css file*/
+html,body,div,span,p,a,em,font,img,q,s,b,u,i,ol,ul,li,fieldset,form,label,legend{
+	margin:0;
+	padding:0;
+	border:0;
+	outline:0;
+	vertical-align:baseline;
+	background:transparent;
+	font-family:"微软雅黑",Verdana,Arial,Helvetica,sans-serif;
+}
+ul,ol{
+	list-style:none;
+}
+blockquote,q{
+	quotes:none;
+}
+blockquote:before,blockquote:after,q:before,q:after{
+	content:'';
+	content:none;
+}
+
+/*tables still need 'cellspacing="0"' in the markup */
+table{
+	border-collapse:collapse;
+}
+
+a{text-decoration: none;color:#000;}
+a:hover {text-decoration: none;}
+body{font-size:14px;}
+.warp{ background:#d6dee0 url(../images/trs_hd1.jpg) repeat-x center top;}
+.cot1{margin:0 auto; background:url(../images/trs_hd2.jpg) no-repeat; height:330px; padding-top:257px; width:640px;padding-left:254px;}
+.iput1{ width:257px; height:30px; line-height:30px; border:1px solid #c8c8c8; background:#eeeeee;}
+.iput2{ width:184px; height:30px; line-height:30px; border:1px solid #c8c8c8; background:#eeeeee;}
+.hz_mm{ margin-left:10px;}
+.hz_mm a{ color:#e77b00}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

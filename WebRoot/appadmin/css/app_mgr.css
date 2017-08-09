@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+li.s_tab_curr, li.s_tab_curr a{font-weight: bold;background: url(../themes/default/images/grid/grid.png) no-repeat;}
+.input_w{width:890px;}
+.td_con{background-color: #f6f8fa;width:380px;text-align: left;padding:5px;}
+.i_table{BORDER-COLLAPSE: collapse;width: 1024px; }
+.i_table tr td{line-height: 24px; height: 30px; padding: 2px;}
+.i_std{background-color: #dfebf7;}
+.i_ctd{background-color: #ebf6cc;}
+.i_std_flow{background-color: #ebf6cc;}
+.i_std,.i_std_flow,.i_ctd{text-align:center;}

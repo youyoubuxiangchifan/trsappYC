@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 用于配制自定义规则 -->
+<app>
+	<app_guid id="userRule">
+		<guid className="subclass" guidDesc="局级用户"></guid>
+		<guid className="className2" guidDesc="领导专用"></guid>
+	</app_guid>
+	<app_guid id="autoUserRule">
+		<guid className="autoFlowToUsersCreator" guidDesc="自动跳转到下一节点"></guid>
+	</app_guid>
+</app>

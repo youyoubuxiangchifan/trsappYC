@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.1//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.1.dtd">
+<urlrewrite>
+		<rule>
+	        <note>
+	        	应用主页
+	        </note>
+				<from>/([0-9]+)/index.html</from>
+				<to>/appWeb.do?method=appIndexData&amp;groupId=$1</to>
+	    </rule>
+	    <rule>  
+	    	<note>
+	        	应用列表页面、通用
+	        </note>      
+	        <from>/query/([0-9]+)/([0-9]+).html</from> 
+	   		 <to>/appWeb.do?method=queryAppData&amp;groupId=$1&amp;appId=$2</to>    		      
+	    </rule>
+	     <rule>  
+	    	<note>
+	        	信件详细列表页面
+	        </note>      
+	        <from>/qdetail/([0-9]+)/([0-9]+)/([0-9]+).html</from> 
+	   		 <to>/appWeb.do?method=appDataDetail&amp;groupId=$1&amp;appId=$2&amp;dataId=$3</to>    		      
+	    </rule>
+	     <rule>  
+	    	<note>
+	        	信件查询
+	        </note>      
+	        <from>/search/index.html</from> 
+	   		 <to>/appWeb.do?method=appDataDetailSearch</to>    		      
+	    </rule>
+	     <rule>  
+	    	<note>
+	        	信件添加
+	        </note>      
+	        <from>/add.html</from> 
+	   		 <to>/appWeb.do?method=addPage</to>    		      
+	    </rule>
+	     <rule>  
+	    	<note>
+	        	主题信件提交页面
+	        </note>      
+	        <from>/zdetail/([0-9]+)/([0-9]+)/([0-9]+)f([0-9]+).html</from> 
+	   		 <to>/appWeb.do?method=appDataDetail&amp;groupId=$1&amp;appId=$2&amp;dataId=$3&amp;flag=$4</to>    		      
+	    </rule>
+	   
+</urlrewrite>
+
